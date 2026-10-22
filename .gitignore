@@ -1,0 +1,17 @@
+# 비밀 키
+.env
+*.local
+
+# 캐시·빌드 결과
+backend/.cache/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+node_modules/
+dist/
+.DS_Store
+
+# 화면 확인용 빌드, 편집기 설정
+frontend/dist-preview/
+.vscode/
+.venv/

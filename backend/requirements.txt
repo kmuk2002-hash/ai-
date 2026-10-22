@@ -1,0 +1,15 @@
+# Python 3.11 기준. 설치: cd backend && pip install -r requirements.txt
+langgraph==1.2.16
+langchain-core==1.6.12
+langchain-openai==1.7.2
+langchain-ollama==1.1.0       # 로컬 모델 실험용 (LLM_PROVIDER=ollama)
+langchain-mcp-adapters==0.3.2
+mcp==1.30.0
+langsmith==0.14.11
+pydantic==2.13.5
+python-dotenv==1.2.3
+fastapi==0.156.8
+uvicorn==0.54.0
+psycopg[binary]==3.3.6
+httpx==0.28.1
+beautifulsoup4==4.15.0

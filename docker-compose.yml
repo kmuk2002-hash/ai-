@@ -1,0 +1,29 @@
+# 로컬 PostgreSQL 실행용
+#   docker compose up -d
+# 처음 실행할 때 db/schema.sql, db/rag.sql 이 자동으로 적용됨
+# (스키마를 바꾼 뒤 다시 적용하려면: docker compose down -v && docker compose up -d)
+#
+# pgvector 이미지라서 RAG 벡터 검색(db/rag.sql)도 같은 DB에서 한다
+#
+# 접속 정보: postgresql://invest:invest@localhost:5432/invest
+
+# 폴더 이름이 한글이라 compose가 프로젝트 이름을 만들지 못해서 직접 지정
+name: invest-report
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: invest-db
+    environment:
+      POSTGRES_USER: invest
+      POSTGRES_PASSWORD: invest
+      POSTGRES_DB: invest
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./db/rag.sql:/docker-entrypoint-initdb.d/02_rag.sql:ro
+      - invest-db-data:/var/lib/postgresql/data
+
+volumes:
+  invest-db-data:

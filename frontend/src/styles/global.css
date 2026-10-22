@@ -1,0 +1,246 @@
+/*
+ * 투자 노트 — 디자인 토큰
+ * 콘셉트: 흰 종이 위의 리서치 노트 + 뒤에서 조용히 움직이는 시세 차트
+ *   - 바탕은 흰색, 포인트는 시세판의 초록 하나. 화면에서 움직이는 것은 배경 차트뿐
+ *   - 형광펜(하이라이트)과 등락색만 채도가 높다
+ */
+
+:root {
+  /* 종이와 잉크 (잉크는 초록 기운이 도는 먹색) */
+  --paper: #ffffff;
+  --sheet: #ffffff;
+  --sheet-alt: #f3f8f5;
+  --ink: #14231c;
+  --ink-soft: #45574e;
+  --ink-faint: #7b8a82;
+  --rule: #dfe8e3;
+  --rule-strong: #b9cbc1;
+  --margin-rule: #0e8f62;
+  --accent: #0e8f62;
+  --accent-deep: #0a6b49;
+  --accent-ink: #ffffff;
+  --accent-wash: rgba(14, 143, 98, 0.08);
+
+  /* 등락 */
+  --up: #12a150;
+  --down: #d8443a;
+
+  /* 형광펜 */
+  --m-support: rgba(118, 214, 98, 0.5);
+  --m-concern: rgba(255, 128, 140, 0.48);
+  --m-to_verify: rgba(255, 221, 40, 0.62);
+  --m-disagree: rgba(150, 170, 200, 0.45);
+  --m-support-solid: #4caf50;
+  --m-concern-solid: #e05a62;
+  --m-to_verify-solid: #e0b400;
+  --m-disagree-solid: #8798b3;
+
+  /* 결정 */
+  --buy: #12a150;
+  --hold: #a26c00;
+  --sell: #d8443a;
+
+  --shadow-slip: 0 1px 0 rgba(20, 35, 28, 0.04), 0 14px 34px -10px rgba(10, 60, 40, 0.25);
+  --shadow-sheet: 0 0 0 1px rgba(14, 143, 98, 0.07), 0 10px 30px -18px rgba(10, 60, 40, 0.35);
+
+  /* 글꼴 */
+  --font-serif: 'Noto Serif KR', 'AppleMyungjo', 'Batang', serif;
+  --font-sans: 'IBM Plex Sans KR', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR',
+    'Malgun Gothic', sans-serif;
+  --font-num: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* 글자 크기 (1.2 배율) */
+  --t-xs: 12px;
+  --t-sm: 13px;
+  --t-md: 15px;
+  --t-body: 16.5px;
+  --t-lg: 20px;
+  --t-xl: 28px;
+  --t-hero: 44px;
+
+  /* 흰 바탕 고정 (어두운 테마 없음) */
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--t-md);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+main {
+  position: relative;
+  z-index: 1;   /* 배경 차트(MarketBackdrop) 위 */
+  padding: 28px 20px 96px;
+}
+@media (max-width: 600px) {
+  main {
+    padding: 20px 14px 72px;
+  }
+}
+
+.page {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+/* 본문이 넓은 화면(리포트·결정 이력): 배경 차트 위에 흰 종이를 한 장 깔아 글자를 읽기 쉽게 */
+.page.veil {
+  padding: 24px 28px 32px;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(14, 143, 98, 0.06);
+}
+@media (max-width: 600px) {
+  .page.veil {
+    padding: 16px 12px 24px;
+  }
+}
+
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* 입력 요소 — 장부 칸처럼 밑줄 중심 */
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 8px 2px;
+  font: inherit;
+  font-size: var(--t-md);
+  color: var(--ink);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule-strong);
+  border-radius: 0;
+  transition: border-color 0.15s ease;
+}
+select {
+  cursor: pointer;
+}
+input:hover,
+select:hover,
+textarea:hover {
+  border-bottom-color: var(--ink-faint);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+  box-shadow: 0 1px 0 0 var(--accent);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-faint);
+}
+input[type='checkbox'],
+input[type='radio'] {
+  width: auto;
+  padding: 0;
+  accent-color: var(--accent);
+}
+select option {
+  background: var(--sheet);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font: inherit;
+  font-size: var(--t-md);
+  font-weight: 600;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn.primary {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+.btn.primary:hover:not(:disabled) {
+  background: var(--accent-deep);
+}
+.btn.ghost {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--rule-strong);
+}
+.btn.ghost:hover {
+  border-color: var(--ink-soft);
+  text-decoration: none;
+}
+.btn.block {
+  width: 100%;
+}
+
+::selection {
+  background: rgba(14, 143, 98, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
